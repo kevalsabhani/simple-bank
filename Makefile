@@ -1,5 +1,5 @@
 dbcontainer:
-	docker run --name dbcontainer -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:latest
+	docker rm dbcontainer; docker run --name dbcontainer -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:latest
 
 createdb:
 	docker exec -it dbcontainer createdb --username=root --owner=root simple_bank
@@ -17,6 +17,9 @@ sqlc:
 	sqlc generate
 
 test:
-	go test -v ./...
+	go test -cover -v ./...
+
+server:
+	go run main.go
 
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc test
